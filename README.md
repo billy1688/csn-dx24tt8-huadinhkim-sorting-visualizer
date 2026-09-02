@@ -59,8 +59,8 @@ hoán đổi và sắp xếp dữ liệu thông qua giao diện đồ họa.
 
 | Tuần | Nội dung | Trạng thái |
 |---|---|---|
-| 01 | Tạo repository, README và đề cương | Đang thực hiện |
-| 02 | Phân tích yêu cầu và thiết kế giao diện | Chưa thực hiện |
+| 01 | Tạo repository, README và đề cương | Hoàn thành |
+| 02 | Phân tích yêu cầu và thiết kế giao diện | Đang thực hiện |
 | 03 | Xây dựng Bubble, Selection, Insertion Sort | Chưa thực hiện |
 | 04 | Xây dựng Merge Sort và Quick Sort | Chưa thực hiện |
 | 05 | Hoàn thiện hoạt ảnh và điều khiển | Chưa thực hiện |
