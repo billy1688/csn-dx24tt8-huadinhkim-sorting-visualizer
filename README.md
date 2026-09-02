@@ -5,7 +5,7 @@
 - Học viên: huadinhkim
 - Mã lớp: DX24TT8
 - Loại đồ án: Đồ án cơ sở ngành
-- Giảng viên hướng dẫn: Đang cập nhật
+- Giảng viên hướng dẫn: ThS. Lê Phong Dũ
 - Repository: csn-dx24tt8-huadinhkim-sorting-visualizer
 
 ## Giới thiệu
