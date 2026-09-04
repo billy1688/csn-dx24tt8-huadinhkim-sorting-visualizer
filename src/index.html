@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Ứng dụng trực quan hóa từng bước của thuật toán sắp xếp Bubble Sort."
+    />
+    <title>Sorting Lab | Trực quan hóa thuật toán sắp xếp</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="js/algorithms/bubbleSort.js" defer></script>
+    <script src="js/visualizer.js" defer></script>
+    <script src="js/app.js" defer></script>
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true">SL</span>
+          <div>
+            <p class="eyebrow">ĐỒ ÁN CƠ SỞ NGÀNH</p>
+            <h1>Sorting Lab</h1>
+          </div>
+        </div>
+
+        <div class="student-info" aria-label="Thông tin học viên">
+          <span>DX24TT8</span>
+          <strong>huadinhkim</strong>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <section class="control-panel" aria-labelledby="controls-title">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">Bộ điều khiển</p>
+              <h2 id="controls-title">Thiết lập mô phỏng</h2>
+            </div>
+            <span id="statusBadge" class="status-badge" data-status="idle">
+              Sẵn sàng
+            </span>
+          </div>
+
+          <div class="control-grid">
+            <label class="field field-wide" for="arrayInput">
+              <span>Dữ liệu đầu vào</span>
+              <span class="field-note">Tối đa 30 số, cách nhau bằng dấu phẩy</span>
+              <div class="input-action">
+                <input
+                  id="arrayInput"
+                  type="text"
+                  value="42, 18, 76, 31, 55, 12, 68, 24"
+                  inputmode="numeric"
+                  autocomplete="off"
+                  aria-describedby="inputMessage"
+                />
+                <button id="applyInputBtn" class="button button-secondary" type="button">
+                  Áp dụng
+                </button>
+              </div>
+              <small id="inputMessage" class="field-message" aria-live="polite"></small>
+            </label>
+
+            <label class="field" for="algorithmSelect">
+              <span>Thuật toán</span>
+              <select id="algorithmSelect">
+                <option value="bubble">Bubble Sort</option>
+                <option value="selection" disabled>Selection Sort — sắp có</option>
+                <option value="insertion" disabled>Insertion Sort — sắp có</option>
+                <option value="merge" disabled>Merge Sort — sắp có</option>
+                <option value="quick" disabled>Quick Sort — sắp có</option>
+              </select>
+            </label>
+
+            <label class="field" for="sizeRange">
+              <span>Số phần tử: <output id="sizeOutput">8</output></span>
+              <input id="sizeRange" type="range" min="5" max="30" value="8" />
+            </label>
+
+            <label class="field" for="speedRange">
+              <span>Tốc độ: <output id="speedOutput">5</output>/10</span>
+              <input id="speedRange" type="range" min="1" max="10" value="5" />
+            </label>
+
+            <div class="field random-field">
+              <span>Mảng thử nghiệm</span>
+              <button id="randomBtn" class="button button-secondary" type="button">
+                Tạo mảng ngẫu nhiên
+              </button>
+            </div>
+          </div>
+
+          <div class="transport" aria-label="Điều khiển mô phỏng">
+            <button id="startBtn" class="button button-primary" type="button">
+              <span aria-hidden="true">▶</span>
+              Bắt đầu
+            </button>
+            <button id="pauseBtn" class="button button-secondary" type="button" disabled>
+              <span aria-hidden="true">Ⅱ</span>
+              <span id="pauseButtonText">Tạm dừng</span>
+            </button>
+            <button id="stepBtn" class="button button-secondary" type="button">
+              <span aria-hidden="true">→</span>
+              Từng bước
+            </button>
+            <button id="resetBtn" class="button button-ghost" type="button">
+              <span aria-hidden="true">↺</span>
+              Đặt lại
+            </button>
+          </div>
+        </section>
+
+        <section class="visual-panel" aria-labelledby="visual-title">
+          <div class="visual-header">
+            <div>
+              <p class="section-kicker">Mô phỏng</p>
+              <h2 id="visual-title">Bubble Sort</h2>
+            </div>
+
+            <div class="legend" aria-label="Chú thích màu sắc">
+              <span><i class="legend-dot default"></i>Chưa xét</span>
+              <span><i class="legend-dot comparing"></i>Đang so sánh</span>
+              <span><i class="legend-dot swapping"></i>Đang đổi chỗ</span>
+              <span><i class="legend-dot sorted"></i>Đã sắp xếp</span>
+            </div>
+          </div>
+
+          <div class="chart-frame">
+            <div
+              id="barsContainer"
+              class="bars-container"
+              role="img"
+              aria-label="Biểu đồ cột thể hiện mảng cần sắp xếp"
+            ></div>
+          </div>
+
+          <p id="stepDescription" class="step-description" aria-live="polite">
+            Chọn Bắt đầu hoặc Từng bước để quan sát thuật toán.
+          </p>
+        </section>
+
+        <section class="insight-grid" aria-label="Mã giả và thống kê">
+          <article class="code-panel">
+            <div class="section-heading compact">
+              <div>
+                <p class="section-kicker">Mã giả</p>
+                <h2>Bubble Sort</h2>
+              </div>
+              <span class="complexity-pill">O(n²)</span>
+            </div>
+
+            <ol id="pseudocode" class="pseudocode" aria-label="Mã giả Bubble Sort">
+              <li data-line="1"><code>for i ← 0 to n - 2</code></li>
+              <li data-line="2"><code>&nbsp;&nbsp;for j ← 0 to n - i - 2</code></li>
+              <li data-line="3"><code>&nbsp;&nbsp;&nbsp;&nbsp;if A[j] &gt; A[j + 1]</code></li>
+              <li data-line="4"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;swap(A[j], A[j + 1])</code></li>
+              <li data-line="5"><code>&nbsp;&nbsp;mark A[n - i - 1] as sorted</code></li>
+              <li data-line="6"><code>mark A[0] as sorted</code></li>
+            </ol>
+          </article>
+
+          <article class="stats-panel">
+            <div class="section-heading compact">
+              <div>
+                <p class="section-kicker">Thống kê</p>
+                <h2>Tiến trình hiện tại</h2>
+              </div>
+            </div>
+
+            <dl class="stats-grid">
+              <div>
+                <dt>Phần tử</dt>
+                <dd id="elementCount">8</dd>
+              </div>
+              <div>
+                <dt>Bước</dt>
+                <dd id="stepCount">0</dd>
+              </div>
+              <div>
+                <dt>So sánh</dt>
+                <dd id="comparisonCount">0</dd>
+              </div>
+              <div>
+                <dt>Hoán đổi</dt>
+                <dd id="swapCount">0</dd>
+              </div>
+              <div class="stat-wide">
+                <dt>Thời gian mô phỏng</dt>
+                <dd><span id="elapsedTime">0</span> ms</dd>
+              </div>
+            </dl>
+
+            <div class="complexity-table" aria-label="Độ phức tạp Bubble Sort">
+              <div><span>Tốt nhất</span><strong>O(n)</strong></div>
+              <div><span>Trung bình</span><strong>O(n²)</strong></div>
+              <div><span>Xấu nhất</span><strong>O(n²)</strong></div>
+              <div><span>Bộ nhớ</span><strong>O(1)</strong></div>
+            </div>
+          </article>
+        </section>
+      </main>
+
+      <footer>
+        <span>Trực quan hóa và so sánh các thuật toán sắp xếp</span>
+        <span>HTML · CSS · JavaScript</span>
+      </footer>
+    </div>
+  </body>
+</html>
