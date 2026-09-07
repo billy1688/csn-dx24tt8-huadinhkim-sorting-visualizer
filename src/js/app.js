@@ -72,6 +72,53 @@
         "mark all elements as sorted",
       ],
     },
+    merge: {
+      name: "Merge Sort",
+      stepFactory: "mergeSortSteps",
+      introduction: "Bắt đầu chia mảng thành các đoạn nhỏ rồi trộn theo thứ tự.",
+      operationLabel: "Ghi mảng",
+      complexity: {
+        best: "O(n log n)",
+        average: "O(n log n)",
+        worst: "O(n log n)",
+        space: "O(n)",
+      },
+      pseudocode: [
+        "mergeSort(A, left, right)",
+        "  if left ≥ right: return",
+        "  middle ← (left + right) / 2",
+        "  mergeSort(A, left, middle)",
+        "  mergeSort(A, middle + 1, right)",
+        "  i ← 0, j ← 0, k ← left",
+        "  while both halves have values",
+        "    A[k] ← smaller value; k ← k + 1",
+        "  copy remaining values into A",
+      ],
+    },
+    quick: {
+      name: "Quick Sort",
+      stepFactory: "quickSortSteps",
+      introduction: "Bắt đầu phân hoạch mảng quanh một phần tử chốt.",
+      operationLabel: "Hoán đổi",
+      complexity: {
+        best: "O(n log n)",
+        average: "O(n log n)",
+        worst: "O(n²)",
+        space: "O(log n)",
+      },
+      pseudocode: [
+        "quickSort(A, low, high)",
+        "  pivot ← A[high]",
+        "  i ← low - 1",
+        "  for j ← low to high - 1",
+        "    if A[j] ≤ pivot",
+        "      i ← i + 1",
+        "      swap(A[i], A[j])",
+        "  swap(A[i + 1], A[high])",
+        "  quickSort(A, low, pivotIndex - 1)",
+        "  quickSort(A, pivotIndex + 1, high)",
+      ],
+    },
   };
 
   const elements = {

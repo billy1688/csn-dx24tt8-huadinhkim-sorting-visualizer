@@ -85,7 +85,7 @@
 
         if (
           activeIndices.includes(index) &&
-          (activeType === "compare" || activeType === "select")
+          ["compare", "select", "pivot", "range"].includes(activeType)
         ) {
           item.bar.classList.remove("sorted");
           item.bar.classList.add("comparing");

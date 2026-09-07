@@ -728,34 +728,52 @@ footer {
     min-height: 0;
     grid-template-columns: 1fr;
     grid-template-rows: minmax(0, 1fr) auto;
+    gap: 10px;
   }
 
   .code-panel,
   .stats-panel {
+    padding: 12px;
     overflow: hidden;
   }
 
+  .code-panel .section-kicker,
+  .stats-panel .section-kicker {
+    display: none;
+  }
+
+  .code-panel .section-heading,
+  .stats-panel .section-heading {
+    align-items: center;
+  }
+
+  .section-heading.compact h2 {
+    font-size: 1rem;
+  }
+
   .pseudocode {
-    margin-top: 10px;
+    margin-top: 6px;
+    padding-block: 4px;
   }
 
   .pseudocode li {
     grid-template-columns: 34px 1fr;
-    padding: 5px 12px 5px 0;
+    padding: 2px 12px 2px 0;
   }
 
   .pseudocode code {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
+    line-height: 1.35;
   }
 
   .stats-grid {
     grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 6px;
-    margin: 9px 0;
+    margin: 6px 0;
   }
 
   .stats-grid > div {
-    padding: 7px 8px;
+    padding: 5px 7px;
   }
 
   .stats-grid .stat-wide {
@@ -764,13 +782,13 @@ footer {
 
   .stats-grid dt {
     overflow: hidden;
-    font-size: 0.68rem;
+    font-size: 0.75rem;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 
   .stats-grid dd {
-    font-size: 1.02rem;
+    font-size: 0.94rem;
   }
 
   .complexity-table {
@@ -781,7 +799,7 @@ footer {
     align-items: flex-start;
     flex-direction: column;
     gap: 2px;
-    padding: 7px 8px;
+    padding: 5px 7px;
     border-right: 1px solid rgba(49, 80, 110, 0.5);
     border-bottom: 0;
   }
