@@ -74,13 +74,13 @@ select:disabled {
 }
 
 .page-shell {
-  width: min(1480px, 100%);
+  width: min(1600px, 100%);
   margin: 0 auto;
-  padding: 0 28px 32px;
+  padding: 0 20px 20px;
 }
 
 .topbar {
-  min-height: 98px;
+  min-height: 76px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -95,8 +95,8 @@ select:disabled {
 }
 
 .brand-mark {
-  width: 48px;
-  height: 48px;
+  width: 42px;
+  height: 42px;
   display: grid;
   place-items: center;
   color: #061a1a;
@@ -150,8 +150,8 @@ select:disabled {
 
 .workspace {
   display: grid;
-  gap: 20px;
-  padding: 26px 0;
+  gap: 14px;
+  padding: 14px 0;
 }
 
 .control-panel,
@@ -169,7 +169,7 @@ select:disabled {
 }
 
 .control-panel {
-  padding: 22px;
+  padding: 16px;
 }
 
 .section-heading,
@@ -223,15 +223,15 @@ select:disabled {
 .control-grid {
   display: grid;
   grid-template-columns: minmax(220px, 1.35fr) repeat(3, minmax(150px, 0.7fr));
-  gap: 16px;
-  margin-top: 20px;
+  gap: 12px;
+  margin-top: 14px;
 }
 
 .field {
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   color: var(--text);
   font-size: 0.88rem;
   font-weight: 750;
@@ -261,7 +261,7 @@ select:disabled {
 input[type="text"],
 select {
   width: 100%;
-  min-height: 44px;
+  min-height: 40px;
   color: var(--text);
   background: rgba(5, 15, 27, 0.72);
   border: 1px solid var(--border-bright);
@@ -290,7 +290,7 @@ input[type="range"] {
 }
 
 .button {
-  min-height: 44px;
+  min-height: 40px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -342,16 +342,16 @@ input[type="range"] {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-top: 14px;
-  padding-top: 16px;
+  margin-top: 10px;
+  padding-top: 10px;
   border-top: 1px solid rgba(49, 80, 110, 0.55);
 }
 
 .visual-panel {
-  min-height: 440px;
+  min-height: 400px;
   display: flex;
   flex-direction: column;
-  padding: 22px;
+  padding: 16px;
   overflow: hidden;
 }
 
@@ -400,8 +400,8 @@ input[type="range"] {
 .chart-frame {
   position: relative;
   flex: 1;
-  min-height: 300px;
-  margin-top: 20px;
+  min-height: 260px;
+  margin-top: 12px;
   padding: 30px 18px 20px;
   border: 1px solid rgba(49, 80, 110, 0.58);
   border-radius: var(--radius-md);
@@ -490,11 +490,11 @@ input[type="range"] {
 }
 
 .step-description {
-  min-height: 50px;
+  min-height: 42px;
   display: flex;
   align-items: center;
-  margin: 14px 0 0;
-  padding: 11px 14px;
+  margin: 8px 0 0;
+  padding: 8px 12px;
   color: #c8d7e5;
   background: rgba(38, 215, 198, 0.07);
   border-left: 3px solid var(--primary);
@@ -504,19 +504,19 @@ input[type="range"] {
 .insight-grid {
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
-  gap: 20px;
+  gap: 14px;
 }
 
 .code-panel,
 .stats-panel {
   min-width: 0;
   border-radius: var(--radius-lg);
-  padding: 22px;
+  padding: 16px;
 }
 
 .pseudocode {
-  margin: 18px 0 0;
-  padding: 10px 0;
+  margin: 12px 0 0;
+  padding: 7px 0;
   overflow-x: auto;
   color: #6f8da8;
   background: rgba(4, 13, 24, 0.62);
@@ -530,7 +530,7 @@ input[type="range"] {
   min-width: max-content;
   display: grid;
   grid-template-columns: 42px 1fr;
-  padding: 7px 18px 7px 0;
+  padding: 6px 16px 6px 0;
   color: #c3d1df;
   border-left: 3px solid transparent;
   transition:
@@ -560,18 +560,19 @@ input[type="range"] {
 .pseudocode code {
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
   font-size: 0.88rem;
+  white-space: pre;
 }
 
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-  margin: 18px 0 14px;
+  gap: 8px;
+  margin: 12px 0 10px;
 }
 
 .stats-grid > div {
   min-width: 0;
-  padding: 13px 14px;
+  padding: 10px 12px;
   background: rgba(4, 13, 24, 0.55);
   border: 1px solid rgba(49, 80, 110, 0.48);
   border-radius: var(--radius-sm);
@@ -633,6 +634,193 @@ footer {
   color: #7890a6;
   border-top: 1px solid rgba(49, 80, 110, 0.5);
   font-size: 0.78rem;
+}
+
+/*
+ * Bố cục bàn làm việc dành cho laptop và màn hình máy tính.
+ * Bộ điều khiển nằm trên một hàng; mô phỏng, mã giả và thống kê
+ * cùng xuất hiện trong phần không gian còn lại của màn hình.
+ */
+@media (min-width: 1051px) {
+  .workspace {
+    grid-template-columns: minmax(0, 1.58fr) minmax(430px, 0.92fr);
+    grid-template-rows: auto minmax(500px, 1fr);
+  }
+
+  .control-panel {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 150px minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    column-gap: 16px;
+    row-gap: 6px;
+  }
+
+  .control-panel > .section-heading {
+    grid-column: 1;
+    grid-row: 1 / 3;
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 10px;
+    padding-right: 14px;
+    border-right: 1px solid rgba(49, 80, 110, 0.55);
+  }
+
+  .control-panel > .section-heading h2 {
+    max-width: 130px;
+    font-size: 1.08rem;
+  }
+
+  .control-grid {
+    grid-column: 2;
+    grid-row: 1;
+    grid-template-columns:
+      minmax(220px, 1.6fr)
+      minmax(135px, 0.85fr)
+      minmax(100px, 0.65fr)
+      minmax(100px, 0.65fr)
+      minmax(140px, 0.8fr);
+    align-items: end;
+    gap: 10px;
+    margin-top: 0;
+  }
+
+  .field-wide {
+    grid-column: auto;
+  }
+
+  .field-note {
+    display: none;
+  }
+
+  .field-message {
+    min-height: 0;
+    line-height: 1.15;
+  }
+
+  .field-message:empty {
+    display: none;
+  }
+
+  .transport {
+    grid-column: 2;
+    grid-row: 2;
+    gap: 8px;
+    margin-top: 2px;
+    padding-top: 8px;
+  }
+
+  .transport .button {
+    min-height: 36px;
+    padding-inline: 14px;
+  }
+
+  .visual-panel {
+    grid-column: 1;
+    grid-row: 2;
+    min-height: 0;
+  }
+
+  .insight-grid {
+    grid-column: 2;
+    grid-row: 2;
+    min-height: 0;
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(0, 1fr) auto;
+  }
+
+  .code-panel,
+  .stats-panel {
+    overflow: hidden;
+  }
+
+  .pseudocode {
+    margin-top: 10px;
+  }
+
+  .pseudocode li {
+    grid-template-columns: 34px 1fr;
+    padding: 5px 12px 5px 0;
+  }
+
+  .pseudocode code {
+    font-size: 0.8rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 6px;
+    margin: 9px 0;
+  }
+
+  .stats-grid > div {
+    padding: 7px 8px;
+  }
+
+  .stats-grid .stat-wide {
+    grid-column: auto;
+  }
+
+  .stats-grid dt {
+    overflow: hidden;
+    font-size: 0.68rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .stats-grid dd {
+    font-size: 1.02rem;
+  }
+
+  .complexity-table {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .complexity-table div {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 2px;
+    padding: 7px 8px;
+    border-right: 1px solid rgba(49, 80, 110, 0.5);
+    border-bottom: 0;
+  }
+
+  .complexity-table div:nth-child(-n + 2) {
+    border-bottom: 0;
+  }
+
+  .complexity-table div:last-child {
+    border-right: 0;
+  }
+
+  footer {
+    display: none;
+  }
+}
+
+@media (min-width: 1051px) and (min-height: 700px) {
+  body {
+    overflow: hidden;
+  }
+
+  .page-shell {
+    height: 100svh;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 0;
+  }
+
+  .workspace {
+    min-height: 0;
+    flex: 1;
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .chart-frame,
+  .bars-container {
+    min-height: 0;
+  }
 }
 
 @media (max-width: 1050px) {

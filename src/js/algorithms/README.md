@@ -3,11 +3,20 @@
 | Thuật toán | Tệp mã nguồn | Trạng thái |
 |---|---|---|
 | Bubble Sort | `bubbleSort.js` | Hoàn thành |
-| Selection Sort | `selectionSort.js` | Chưa thực hiện |
-| Insertion Sort | `insertionSort.js` | Chưa thực hiện |
+| Selection Sort | `selectionSort.js` | Hoàn thành |
+| Insertion Sort | `insertionSort.js` | Hoàn thành |
 | Merge Sort | `mergeSort.js` | Chưa thực hiện |
 | Quick Sort | `quickSort.js` | Chưa thực hiện |
 
-Mỗi thuật toán sẽ tạo ra danh sách các bước gồm so sánh, hoán đổi,
-ghi đè và đánh dấu phần tử đã được sắp xếp. Bộ trực quan hóa đọc lần
-lượt các bước này để cập nhật giao diện.
+Mỗi thuật toán nhận một mảng số và trả về danh sách các bước. Bộ trực quan
+hóa đọc lần lượt các bước này để cập nhật cột, dòng mã giả và thống kê.
+
+Các loại bước đang sử dụng:
+
+- `compare`: so sánh hai phần tử.
+- `select`: chọn phần tử đang xét hoặc giá trị nhỏ nhất tạm thời.
+- `swap`: hoán đổi hai phần tử.
+- `overwrite`: dịch chuyển và ghi đè giá trị.
+- `insert`: chèn giá trị vào vị trí phù hợp.
+- `markSorted`: đánh dấu phần tử đã đúng vị trí.
+- `complete`: kết thúc thuật toán.

@@ -7,6 +7,73 @@
   const MIN_VALUE = 1;
   const MAX_VALUE = 100;
 
+  const ALGORITHM_CATALOG = {
+    bubble: {
+      name: "Bubble Sort",
+      stepFactory: "bubbleSortSteps",
+      introduction: "Bắt đầu duyệt mảng từ trái sang phải.",
+      operationLabel: "Hoán đổi",
+      complexity: {
+        best: "O(n)",
+        average: "O(n²)",
+        worst: "O(n²)",
+        space: "O(1)",
+      },
+      pseudocode: [
+        "for i ← 0 to n - 2",
+        "  for j ← 0 to n - i - 2",
+        "    if A[j] > A[j + 1]",
+        "      swap(A[j], A[j + 1])",
+        "  mark A[n - i - 1] as sorted",
+        "mark A[0] as sorted",
+      ],
+    },
+    selection: {
+      name: "Selection Sort",
+      stepFactory: "selectionSortSteps",
+      introduction: "Bắt đầu tìm phần tử nhỏ nhất của đoạn chưa sắp xếp.",
+      operationLabel: "Hoán đổi",
+      complexity: {
+        best: "O(n²)",
+        average: "O(n²)",
+        worst: "O(n²)",
+        space: "O(1)",
+      },
+      pseudocode: [
+        "for i ← 0 to n - 2",
+        "  minIndex ← i",
+        "  for j ← i + 1 to n - 1",
+        "    if A[j] < A[minIndex]",
+        "      minIndex ← j",
+        "  if minIndex ≠ i",
+        "    swap(A[i], A[minIndex])",
+        "  mark A[i] as sorted",
+      ],
+    },
+    insertion: {
+      name: "Insertion Sort",
+      stepFactory: "insertionSortSteps",
+      introduction: "Bắt đầu chèn từng phần tử vào đoạn bên trái đã sắp xếp.",
+      operationLabel: "Dịch chuyển",
+      complexity: {
+        best: "O(n)",
+        average: "O(n²)",
+        worst: "O(n²)",
+        space: "O(1)",
+      },
+      pseudocode: [
+        "for i ← 1 to n - 1",
+        "  key ← A[i]",
+        "  j ← i - 1",
+        "  while j ≥ 0 and A[j] > key",
+        "    A[j + 1] ← A[j]",
+        "    j ← j - 1",
+        "  A[j + 1] ← key",
+        "mark all elements as sorted",
+      ],
+    },
+  };
+
   const elements = {
     arrayInput: document.querySelector("#arrayInput"),
     applyInputBtn: document.querySelector("#applyInputBtn"),
@@ -23,14 +90,23 @@
     stepBtn: document.querySelector("#stepBtn"),
     resetBtn: document.querySelector("#resetBtn"),
     statusBadge: document.querySelector("#statusBadge"),
+    visualTitle: document.querySelector("#visual-title"),
+    codeAlgorithmTitle: document.querySelector("#codeAlgorithmTitle"),
+    complexityPill: document.querySelector("#complexityPill"),
     barsContainer: document.querySelector("#barsContainer"),
     pseudocode: document.querySelector("#pseudocode"),
     stepDescription: document.querySelector("#stepDescription"),
     elementCount: document.querySelector("#elementCount"),
     stepCount: document.querySelector("#stepCount"),
     comparisonCount: document.querySelector("#comparisonCount"),
+    operationLabel: document.querySelector("#operationLabel"),
     swapCount: document.querySelector("#swapCount"),
     elapsedTime: document.querySelector("#elapsedTime"),
+    bestComplexity: document.querySelector("#bestComplexity"),
+    averageComplexity: document.querySelector("#averageComplexity"),
+    worstComplexity: document.querySelector("#worstComplexity"),
+    spaceComplexity: document.querySelector("#spaceComplexity"),
+    complexityTable: document.querySelector(".complexity-table"),
   };
 
   const visualizer = new window.SortingVisualizer({
@@ -59,6 +135,40 @@
     paused: "Đã tạm dừng",
     completed: "Hoàn thành",
   };
+
+  function getSelectedAlgorithm() {
+    return ALGORITHM_CATALOG[elements.algorithmSelect.value];
+  }
+
+  function renderAlgorithmDetails() {
+    const algorithm = getSelectedAlgorithm();
+    const codeFragment = document.createDocumentFragment();
+
+    algorithm.pseudocode.forEach((lineContent, index) => {
+      const line = document.createElement("li");
+      const code = document.createElement("code");
+
+      line.dataset.line = String(index + 1);
+      code.textContent = lineContent;
+      line.append(code);
+      codeFragment.append(line);
+    });
+
+    elements.pseudocode.replaceChildren(codeFragment);
+    elements.pseudocode.setAttribute("aria-label", `Mã giả ${algorithm.name}`);
+    elements.visualTitle.textContent = algorithm.name;
+    elements.codeAlgorithmTitle.textContent = algorithm.name;
+    elements.complexityPill.textContent = algorithm.complexity.worst;
+    elements.operationLabel.textContent = algorithm.operationLabel;
+    elements.bestComplexity.textContent = algorithm.complexity.best;
+    elements.averageComplexity.textContent = algorithm.complexity.average;
+    elements.worstComplexity.textContent = algorithm.complexity.worst;
+    elements.spaceComplexity.textContent = algorithm.complexity.space;
+    elements.complexityTable.setAttribute(
+      "aria-label",
+      `Độ phức tạp ${algorithm.name}`,
+    );
+  }
 
   function parseArrayInput(rawValue) {
     const normalized = rawValue.trim();
@@ -200,11 +310,14 @@
   }
 
   function prepareRun() {
+    const algorithm = getSelectedAlgorithm();
+    const createSteps = window.SortingAlgorithms[algorithm.stepFactory];
+
     clearRunState();
     state.currentArray = [...state.originalArray];
-    state.steps = window.SortingAlgorithms.bubbleSortSteps(state.originalArray);
+    state.steps = createSteps(state.originalArray);
     visualizer.setArray(state.originalArray);
-    visualizer.setDescription("Bắt đầu duyệt mảng từ trái sang phải.");
+    visualizer.setDescription(algorithm.introduction);
     updateStatistics();
   }
 
@@ -340,6 +453,19 @@
     setInputMessage("");
   }
 
+  function handleAlgorithmChange() {
+    const algorithm = getSelectedAlgorithm();
+
+    clearRunState();
+    state.currentArray = [...state.originalArray];
+    renderAlgorithmDetails();
+    visualizer.setArray(state.originalArray);
+    visualizer.setDescription(`Đã chọn ${algorithm.name}. ${algorithm.introduction}`);
+    visualizer.updateAccessibleLabel(state.originalArray, algorithm.introduction);
+    setStatus("idle");
+    updateStatistics();
+  }
+
   elements.applyInputBtn.addEventListener("click", handleManualInput);
   elements.arrayInput.addEventListener("keydown", (event) => {
     if (event.key === "Enter") {
@@ -360,11 +486,13 @@
   });
 
   elements.randomBtn.addEventListener("click", handleRandomArray);
+  elements.algorithmSelect.addEventListener("change", handleAlgorithmChange);
   elements.startBtn.addEventListener("click", startRun);
   elements.pauseBtn.addEventListener("click", togglePause);
   elements.stepBtn.addEventListener("click", runSingleStep);
   elements.resetBtn.addEventListener("click", resetRun);
 
+  renderAlgorithmDetails();
   visualizer.setArray(DEFAULT_ARRAY);
   updateControls();
   updateStatistics();

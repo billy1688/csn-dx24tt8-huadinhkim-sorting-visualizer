@@ -5,11 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Ứng dụng trực quan hóa từng bước của thuật toán sắp xếp Bubble Sort."
+      content="Ứng dụng trực quan hóa Bubble Sort, Selection Sort và Insertion Sort."
     />
     <title>Sorting Lab | Trực quan hóa thuật toán sắp xếp</title>
     <link rel="stylesheet" href="css/style.css" />
     <script src="js/algorithms/bubbleSort.js" defer></script>
+    <script src="js/algorithms/selectionSort.js" defer></script>
+    <script src="js/algorithms/insertionSort.js" defer></script>
     <script src="js/visualizer.js" defer></script>
     <script src="js/app.js" defer></script>
   </head>
@@ -66,8 +68,8 @@
               <span>Thuật toán</span>
               <select id="algorithmSelect">
                 <option value="bubble">Bubble Sort</option>
-                <option value="selection" disabled>Selection Sort — sắp có</option>
-                <option value="insertion" disabled>Insertion Sort — sắp có</option>
+                <option value="selection">Selection Sort</option>
+                <option value="insertion">Insertion Sort</option>
                 <option value="merge" disabled>Merge Sort — sắp có</option>
                 <option value="quick" disabled>Quick Sort — sắp có</option>
               </select>
@@ -145,9 +147,9 @@
             <div class="section-heading compact">
               <div>
                 <p class="section-kicker">Mã giả</p>
-                <h2>Bubble Sort</h2>
+                <h2 id="codeAlgorithmTitle">Bubble Sort</h2>
               </div>
-              <span class="complexity-pill">O(n²)</span>
+              <span id="complexityPill" class="complexity-pill">O(n²)</span>
             </div>
 
             <ol id="pseudocode" class="pseudocode" aria-label="Mã giả Bubble Sort">
@@ -182,7 +184,7 @@
                 <dd id="comparisonCount">0</dd>
               </div>
               <div>
-                <dt>Hoán đổi</dt>
+                <dt id="operationLabel">Hoán đổi</dt>
                 <dd id="swapCount">0</dd>
               </div>
               <div class="stat-wide">
@@ -192,10 +194,10 @@
             </dl>
 
             <div class="complexity-table" aria-label="Độ phức tạp Bubble Sort">
-              <div><span>Tốt nhất</span><strong>O(n)</strong></div>
-              <div><span>Trung bình</span><strong>O(n²)</strong></div>
-              <div><span>Xấu nhất</span><strong>O(n²)</strong></div>
-              <div><span>Bộ nhớ</span><strong>O(1)</strong></div>
+              <div><span>Tốt nhất</span><strong id="bestComplexity">O(n)</strong></div>
+              <div><span>Trung bình</span><strong id="averageComplexity">O(n²)</strong></div>
+              <div><span>Xấu nhất</span><strong id="worstComplexity">O(n²)</strong></div>
+              <div><span>Bộ nhớ</span><strong id="spaceComplexity">O(1)</strong></div>
             </div>
           </article>
         </section>

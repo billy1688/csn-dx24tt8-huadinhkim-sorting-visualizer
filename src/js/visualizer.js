@@ -83,12 +83,18 @@
           item.bar.classList.add("sorted");
         }
 
-        if (activeIndices.includes(index) && activeType === "compare") {
+        if (
+          activeIndices.includes(index) &&
+          (activeType === "compare" || activeType === "select")
+        ) {
           item.bar.classList.remove("sorted");
           item.bar.classList.add("comparing");
         }
 
-        if (activeIndices.includes(index) && activeType === "swap") {
+        if (
+          activeIndices.includes(index) &&
+          ["swap", "overwrite", "insert"].includes(activeType)
+        ) {
           item.bar.classList.remove("sorted");
           item.bar.classList.add("swapping");
         }
