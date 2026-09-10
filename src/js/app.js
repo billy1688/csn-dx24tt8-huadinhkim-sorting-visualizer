@@ -137,6 +137,21 @@
     stepBtn: document.querySelector("#stepBtn"),
     resetBtn: document.querySelector("#resetBtn"),
     statusBadge: document.querySelector("#statusBadge"),
+    visualViewBtn: document.querySelector("#visualViewBtn"),
+    comparisonViewBtn: document.querySelector("#comparisonViewBtn"),
+    visualPanel: document.querySelector("#visualPanel"),
+    insightGrid: document.querySelector("#insightGrid"),
+    comparisonPanel: document.querySelector("#comparisonPanel"),
+    runComparisonBtn: document.querySelector("#runComparisonBtn"),
+    comparisonMetricSelect: document.querySelector("#comparisonMetricSelect"),
+    comparisonBars: document.querySelector("#comparisonBars"),
+    comparisonTableBody: document.querySelector("#comparisonTableBody"),
+    fewestComparisons: document.querySelector("#fewestComparisons"),
+    fewestComparisonsValue: document.querySelector("#fewestComparisonsValue"),
+    fewestOperations: document.querySelector("#fewestOperations"),
+    fewestOperationsValue: document.querySelector("#fewestOperationsValue"),
+    fastestAlgorithm: document.querySelector("#fastestAlgorithm"),
+    fastestAlgorithmValue: document.querySelector("#fastestAlgorithmValue"),
     visualTitle: document.querySelector("#visual-title"),
     codeAlgorithmTitle: document.querySelector("#codeAlgorithmTitle"),
     complexityPill: document.querySelector("#complexityPill"),
@@ -174,6 +189,9 @@
     activeSince: 0,
     playbackTimer: null,
     clockTimer: null,
+    comparisonTimer: null,
+    comparisonResults: [],
+    view: "visual",
   };
 
   const statusContent = {
@@ -181,6 +199,8 @@
     running: "Đang chạy",
     paused: "Đã tạm dừng",
     completed: "Hoàn thành",
+    comparing: "Đang phân tích",
+    analyzed: "Đã phân tích",
   };
 
   function getSelectedAlgorithm() {
@@ -276,7 +296,7 @@
   }
 
   function updateControls() {
-    const isActive = state.status === "running" || state.status === "paused";
+    const isActive = ["running", "paused", "comparing"].includes(state.status);
     const isPaused = state.status === "paused";
 
     elements.arrayInput.disabled = isActive;
@@ -289,6 +309,202 @@
     elements.pauseButtonText.textContent = isPaused ? "Tiếp tục" : "Tạm dừng";
     elements.startBtn.lastChild.textContent =
       state.status === "completed" ? " Chạy lại" : " Bắt đầu";
+  }
+
+  function formatNumber(value) {
+    return new Intl.NumberFormat("vi-VN").format(value);
+  }
+
+  function formatDuration(durationMs) {
+    if (durationMs < 1) {
+      return `${(durationMs * 1000).toFixed(2)} µs`;
+    }
+
+    return `${durationMs.toFixed(3)} ms`;
+  }
+
+  function getMinimumResults(property) {
+    const minimum = Math.min(
+      ...state.comparisonResults.map((result) => result[property]),
+    );
+
+    return state.comparisonResults.filter(
+      (result) => Math.abs(result[property] - minimum) < Number.EPSILON * 10,
+    );
+  }
+
+  function getResultNames(results) {
+    return results.map((result) => ALGORITHM_CATALOG[result.key].name).join(" / ");
+  }
+
+  function renderComparisonSummary() {
+    const comparisonWinners = getMinimumResults("comparisons");
+    const operationWinners = getMinimumResults("operations");
+    const durationWinners = getMinimumResults("durationMs");
+
+    elements.fewestComparisons.textContent = getResultNames(comparisonWinners);
+    elements.fewestComparisonsValue.textContent = `${formatNumber(comparisonWinners[0].comparisons)} lần`;
+    elements.fewestOperations.textContent = getResultNames(operationWinners);
+    elements.fewestOperationsValue.textContent = `${formatNumber(operationWinners[0].operations)} lần`;
+    elements.fastestAlgorithm.textContent = getResultNames(durationWinners);
+    elements.fastestAlgorithmValue.textContent = formatDuration(
+      durationWinners[0].durationMs,
+    );
+  }
+
+  function renderComparisonTable() {
+    const fragment = document.createDocumentFragment();
+
+    state.comparisonResults.forEach((result) => {
+      const algorithm = ALGORITHM_CATALOG[result.key];
+      const row = document.createElement("tr");
+      const values = [
+        algorithm.name,
+        algorithm.complexity.average,
+        formatNumber(result.comparisons),
+        formatNumber(result.operations),
+        formatDuration(result.durationMs),
+      ];
+
+      values.forEach((value, index) => {
+        const cell = document.createElement(index === 0 ? "th" : "td");
+        cell.textContent = value;
+
+        if (index === 0) {
+          cell.scope = "row";
+        }
+
+        row.append(cell);
+      });
+
+      fragment.append(row);
+    });
+
+    elements.comparisonTableBody.replaceChildren(fragment);
+  }
+
+  function renderComparisonChart() {
+    const metric = elements.comparisonMetricSelect.value;
+    const property = metric === "duration" ? "durationMs" : metric;
+    const maximum = Math.max(
+      ...state.comparisonResults.map((result) => result[property]),
+      Number.EPSILON,
+    );
+    const minimum = Math.min(
+      ...state.comparisonResults.map((result) => result[property]),
+    );
+    const fragment = document.createDocumentFragment();
+    const accessibleResults = [];
+
+    state.comparisonResults.forEach((result) => {
+      const algorithm = ALGORITHM_CATALOG[result.key];
+      const value = result[property];
+      const formattedValue =
+        property === "durationMs" ? formatDuration(value) : formatNumber(value);
+      const row = document.createElement("div");
+      const name = document.createElement("span");
+      const track = document.createElement("div");
+      const fill = document.createElement("div");
+      const number = document.createElement("strong");
+
+      row.className = "comparison-bar-row";
+      row.dataset.algorithm = result.key;
+      row.classList.toggle(
+        "best",
+        Math.abs(value - minimum) < Number.EPSILON * 10,
+      );
+      name.className = "comparison-bar-name";
+      name.textContent = algorithm.name;
+      track.className = "comparison-bar-track";
+      fill.className = "comparison-bar-fill";
+      fill.style.width = `${Math.max((value / maximum) * 100, 2)}%`;
+      number.className = "comparison-bar-value";
+      number.textContent = formattedValue;
+
+      track.append(fill);
+      row.append(name, track, number);
+      fragment.append(row);
+      accessibleResults.push(`${algorithm.name}: ${formattedValue}`);
+    });
+
+    elements.comparisonBars.replaceChildren(fragment);
+    elements.comparisonBars.setAttribute(
+      "aria-label",
+      accessibleResults.join("; "),
+    );
+  }
+
+  function renderComparisonResults() {
+    if (state.comparisonResults.length === 0) {
+      return;
+    }
+
+    renderComparisonSummary();
+    renderComparisonTable();
+    renderComparisonChart();
+  }
+
+  function runComparison() {
+    if (state.comparisonTimer !== null) {
+      window.clearTimeout(state.comparisonTimer);
+    }
+
+    setStatus("comparing");
+    elements.runComparisonBtn.disabled = true;
+    elements.runComparisonBtn.textContent = "Đang phân tích...";
+
+    state.comparisonTimer = window.setTimeout(() => {
+      try {
+        state.comparisonResults = window.SortingComparison.benchmark(
+          state.originalArray,
+        );
+        renderComparisonResults();
+        setStatus("analyzed");
+      } catch (error) {
+        elements.comparisonBars.textContent = error.message;
+        setStatus("idle");
+      } finally {
+        elements.runComparisonBtn.disabled = false;
+        elements.runComparisonBtn.textContent = "Phân tích lại";
+        state.comparisonTimer = null;
+      }
+    }, 0);
+  }
+
+  function switchView(view) {
+    if (state.view === view) {
+      return;
+    }
+
+    clearRunState();
+    state.view = view;
+    state.currentArray = [...state.originalArray];
+    document.body.dataset.view = view;
+    elements.visualPanel.hidden = view !== "visual";
+    elements.insightGrid.hidden = view !== "visual";
+    elements.comparisonPanel.hidden = view !== "comparison";
+    elements.visualViewBtn.classList.toggle("active", view === "visual");
+    elements.comparisonViewBtn.classList.toggle("active", view === "comparison");
+    elements.visualViewBtn.setAttribute(
+      "aria-pressed",
+      String(view === "visual"),
+    );
+    elements.comparisonViewBtn.setAttribute(
+      "aria-pressed",
+      String(view === "comparison"),
+    );
+
+    if (view === "comparison") {
+      setStatus("idle");
+      runComparison();
+      return;
+    }
+
+    renderAlgorithmDetails();
+    visualizer.setArray(state.originalArray);
+    visualizer.setDescription(getSelectedAlgorithm().introduction);
+    setStatus("idle");
+    updateStatistics();
   }
 
   function updateStatistics() {
@@ -334,6 +550,14 @@
   function clearRunState() {
     clearPlaybackTimer();
     stopClock();
+
+    if (state.comparisonTimer !== null) {
+      window.clearTimeout(state.comparisonTimer);
+      state.comparisonTimer = null;
+      elements.runComparisonBtn.disabled = false;
+      elements.runComparisonBtn.textContent = "Phân tích lại";
+    }
+
     state.steps = [];
     state.currentStep = 0;
     state.comparisons = 0;
@@ -354,6 +578,10 @@
     visualizer.updateAccessibleLabel(array, message);
     setStatus("idle");
     updateStatistics();
+
+    if (state.view === "comparison") {
+      runComparison();
+    }
   }
 
   function prepareRun() {
@@ -534,12 +762,19 @@
 
   elements.randomBtn.addEventListener("click", handleRandomArray);
   elements.algorithmSelect.addEventListener("change", handleAlgorithmChange);
+  elements.visualViewBtn.addEventListener("click", () => switchView("visual"));
+  elements.comparisonViewBtn.addEventListener("click", () =>
+    switchView("comparison"),
+  );
+  elements.runComparisonBtn.addEventListener("click", runComparison);
+  elements.comparisonMetricSelect.addEventListener("change", renderComparisonChart);
   elements.startBtn.addEventListener("click", startRun);
   elements.pauseBtn.addEventListener("click", togglePause);
   elements.stepBtn.addEventListener("click", runSingleStep);
   elements.resetBtn.addEventListener("click", resetRun);
 
   renderAlgorithmDetails();
+  document.body.dataset.view = state.view;
   visualizer.setArray(DEFAULT_ARRAY);
   updateControls();
   updateStatistics();

@@ -14,6 +14,7 @@
     <script src="js/algorithms/insertionSort.js" defer></script>
     <script src="js/algorithms/mergeSort.js" defer></script>
     <script src="js/algorithms/quickSort.js" defer></script>
+    <script src="js/comparison.js" defer></script>
     <script src="js/visualizer.js" defer></script>
     <script src="js/app.js" defer></script>
   </head>
@@ -27,6 +28,25 @@
             <h1>Sorting Lab</h1>
           </div>
         </div>
+
+        <nav class="view-switcher" aria-label="Chế độ hiển thị">
+          <button
+            id="visualViewBtn"
+            class="view-tab active"
+            type="button"
+            aria-pressed="true"
+          >
+            Trực quan
+          </button>
+          <button
+            id="comparisonViewBtn"
+            class="view-tab"
+            type="button"
+            aria-pressed="false"
+          >
+            So sánh 5 thuật toán
+          </button>
+        </nav>
 
         <div class="student-info" aria-label="Thông tin học viên">
           <span>DX24TT8</span>
@@ -66,7 +86,7 @@
               <small id="inputMessage" class="field-message" aria-live="polite"></small>
             </label>
 
-            <label class="field" for="algorithmSelect">
+            <label class="field algorithm-field" for="algorithmSelect">
               <span>Thuật toán</span>
               <select id="algorithmSelect">
                 <option value="bubble">Bubble Sort</option>
@@ -82,7 +102,7 @@
               <input id="sizeRange" type="range" min="5" max="30" value="8" />
             </label>
 
-            <label class="field" for="speedRange">
+            <label class="field speed-field" for="speedRange">
               <span>Tốc độ: <output id="speedOutput">5</output>/10</span>
               <input id="speedRange" type="range" min="1" max="10" value="5" />
             </label>
@@ -115,7 +135,7 @@
           </div>
         </section>
 
-        <section class="visual-panel" aria-labelledby="visual-title">
+        <section id="visualPanel" class="visual-panel" aria-labelledby="visual-title">
           <div class="visual-header">
             <div>
               <p class="section-kicker">Mô phỏng</p>
@@ -144,7 +164,7 @@
           </p>
         </section>
 
-        <section class="insight-grid" aria-label="Mã giả và thống kê">
+        <section id="insightGrid" class="insight-grid" aria-label="Mã giả và thống kê">
           <article class="code-panel">
             <div class="section-heading compact">
               <div>
@@ -202,6 +222,87 @@
               <div><span>Bộ nhớ</span><strong id="spaceComplexity">O(1)</strong></div>
             </div>
           </article>
+        </section>
+
+        <section
+          id="comparisonPanel"
+          class="comparison-panel"
+          aria-labelledby="comparison-title"
+          hidden
+        >
+          <div class="comparison-header">
+            <div>
+              <p class="section-kicker">Phân tích cùng dữ liệu đầu vào</p>
+              <h2 id="comparison-title">So sánh 5 thuật toán</h2>
+            </div>
+
+            <button id="runComparisonBtn" class="button button-primary" type="button">
+              Phân tích lại
+            </button>
+          </div>
+
+          <div class="comparison-summary" aria-label="Kết quả nổi bật">
+            <article>
+              <span>Ít so sánh nhất</span>
+              <strong id="fewestComparisons">—</strong>
+              <small id="fewestComparisonsValue">—</small>
+            </article>
+            <article>
+              <span>Ít thao tác nhất</span>
+              <strong id="fewestOperations">—</strong>
+              <small id="fewestOperationsValue">—</small>
+            </article>
+            <article>
+              <span>Thời gian thấp nhất</span>
+              <strong id="fastestAlgorithm">—</strong>
+              <small id="fastestAlgorithmValue">—</small>
+            </article>
+          </div>
+
+          <div class="comparison-content">
+            <article class="comparison-chart-panel">
+              <div class="comparison-chart-header">
+                <h3>Biểu đồ so sánh</h3>
+                <label for="comparisonMetricSelect">
+                  <span>Tiêu chí</span>
+                  <select id="comparisonMetricSelect">
+                    <option value="comparisons">Số lần so sánh</option>
+                    <option value="operations">Thao tác dữ liệu</option>
+                    <option value="duration">Thời gian trung bình</option>
+                  </select>
+                </label>
+              </div>
+              <div
+                id="comparisonBars"
+                class="comparison-bars"
+                role="img"
+                aria-label="Biểu đồ kết quả so sánh các thuật toán"
+              ></div>
+            </article>
+
+            <article class="comparison-table-panel">
+              <h3>Kết quả chi tiết</h3>
+              <div class="table-scroll">
+                <table class="comparison-table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Thuật toán</th>
+                      <th scope="col">Trung bình</th>
+                      <th scope="col">So sánh</th>
+                      <th scope="col">Thao tác</th>
+                      <th scope="col">Thời gian</th>
+                    </tr>
+                  </thead>
+                  <tbody id="comparisonTableBody"></tbody>
+                </table>
+              </div>
+            </article>
+          </div>
+
+          <p class="comparison-note">
+            Thời gian là mức trung bình của nhiều lần chạy trong trình duyệt,
+            không bao gồm hoạt ảnh và có thể thay đổi theo thiết bị.
+          </p>
         </section>
       </main>
 
