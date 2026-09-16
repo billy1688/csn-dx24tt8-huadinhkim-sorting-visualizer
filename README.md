@@ -63,8 +63,8 @@ hoán đổi và sắp xếp dữ liệu thông qua giao diện đồ họa.
 | 02 | Phân tích yêu cầu và thiết kế giao diện | Hoàn thành |
 | 03 | Xây dựng Bubble, Selection, Insertion Sort | Hoàn thành |
 | 04 | Xây dựng Merge Sort và Quick Sort | Hoàn thành |
-| 05 | Hoàn thiện hoạt ảnh và điều khiển | Đang thực hiện |
-| 06 | Kiểm thử và so sánh thuật toán | Chưa thực hiện |
+| 05 | Hoàn thiện hoạt ảnh và điều khiển | Hoàn thành |
+| 06 | Kiểm thử và so sánh thuật toán | Đang thực hiện |
 | 07 | Hoàn thiện báo cáo và sản phẩm | Chưa thực hiện |
 
 ## Kết quả dự kiến
