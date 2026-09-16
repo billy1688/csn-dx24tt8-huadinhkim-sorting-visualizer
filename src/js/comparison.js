@@ -229,29 +229,121 @@
     return array.every((value, index) => index === 0 || array[index - 1] <= value);
   }
 
-  function benchmark(inputArray) {
+  function validateInput(inputArray) {
     if (!Array.isArray(inputArray) || inputArray.length === 0) {
       throw new Error("Dữ liệu so sánh không hợp lệ.");
     }
-
-    return Object.entries(runners).map(([key, sortFunction]) => {
-      const stats = { comparisons: 0, operations: 0 };
-      const sortedArray = sortFunction(inputArray, stats);
-      const timing = measureAverageTime(sortFunction, inputArray);
-
-      if (!isSorted(sortedArray)) {
-        throw new Error(`Thuật toán ${key} trả về kết quả không chính xác.`);
-      }
-
-      return {
-        key,
-        comparisons: stats.comparisons,
-        operations: stats.operations,
-        durationMs: timing.durationMs,
-        repetitions: timing.repetitions,
-      };
-    });
   }
 
-  global.SortingComparison = { benchmark };
+  function benchmarkSingleAlgorithm(key, inputArray) {
+    validateInput(inputArray);
+
+    const sortFunction = runners[key];
+    if (!sortFunction) {
+      throw new Error("Thuật toán được chọn không hợp lệ.");
+    }
+
+    const stats = { comparisons: 0, operations: 0 };
+    const sortedArray = sortFunction(inputArray, stats);
+    const timing = measureAverageTime(sortFunction, inputArray);
+
+    if (!isSorted(sortedArray)) {
+      throw new Error(`Thuật toán ${key} trả về kết quả không chính xác.`);
+    }
+
+    return {
+      key,
+      comparisons: stats.comparisons,
+      operations: stats.operations,
+      durationMs: timing.durationMs,
+      repetitions: timing.repetitions,
+    };
+  }
+
+  function createSeed(array) {
+    return array.reduce((seed, value, index) => {
+      const mixedValue = (value + 31) * (index + 17);
+      return Math.imul(seed ^ mixedValue, 16777619) >>> 0;
+    }, 2166136261);
+  }
+
+  function createSeededRandom(seed) {
+    let currentSeed = seed >>> 0;
+
+    return function random() {
+      currentSeed += 0x6d2b79f5;
+      let value = currentSeed;
+      value = Math.imul(value ^ (value >>> 15), value | 1);
+      value ^= value + Math.imul(value ^ (value >>> 7), value | 61);
+      return ((value ^ (value >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  function arraysEqual(firstArray, secondArray) {
+    return firstArray.every((value, index) => value === secondArray[index]);
+  }
+
+  function createInputOrders(inputArray) {
+    validateInput(inputArray);
+
+    const ascending = [...inputArray].sort((first, second) => first - second);
+    const descending = [...ascending].reverse();
+    const shuffled = [...ascending];
+    const random = createSeededRandom(createSeed(ascending));
+
+    for (let index = shuffled.length - 1; index > 0; index -= 1) {
+      const randomIndex = Math.floor(random() * (index + 1));
+      [shuffled[index], shuffled[randomIndex]] = [
+        shuffled[randomIndex],
+        shuffled[index],
+      ];
+    }
+
+    const hasDifferentValues = new Set(ascending).size > 1;
+    if (
+      hasDifferentValues &&
+      (arraysEqual(shuffled, ascending) || arraysEqual(shuffled, descending))
+    ) {
+      const differentIndex = shuffled.findIndex(
+        (value, index) => index > 0 && value !== shuffled[0],
+      );
+
+      if (differentIndex > 0) {
+        [shuffled[0], shuffled[differentIndex]] = [
+          shuffled[differentIndex],
+          shuffled[0],
+        ];
+      }
+    }
+
+    return [
+      { orderKey: "ascending", label: "Tăng dần", values: ascending },
+      { orderKey: "descending", label: "Giảm dần", values: descending },
+      { orderKey: "shuffled", label: "Xáo trộn", values: shuffled },
+    ];
+  }
+
+  function benchmark(inputArray) {
+    validateInput(inputArray);
+
+    return Object.keys(runners).map((key) =>
+      benchmarkSingleAlgorithm(key, inputArray),
+    );
+  }
+
+  function benchmarkInputOrders(key, inputArray) {
+    return createInputOrders(inputArray).map((inputOrder) => ({
+      ...benchmarkSingleAlgorithm(key, inputOrder.values),
+      orderKey: inputOrder.orderKey,
+      label: inputOrder.label,
+      values: inputOrder.values,
+    }));
+  }
+
+  global.SortingComparison = {
+    benchmark,
+    benchmarkSingleAlgorithm,
+    benchmarkInputOrders,
+    createInputOrders,
+  };
 })(window);

@@ -14,6 +14,7 @@
     <script src="js/algorithms/insertionSort.js" defer></script>
     <script src="js/algorithms/mergeSort.js" defer></script>
     <script src="js/algorithms/quickSort.js" defer></script>
+    <script src="js/theory.js" defer></script>
     <script src="js/comparison.js" defer></script>
     <script src="js/visualizer.js" defer></script>
     <script src="js/app.js" defer></script>
@@ -44,7 +45,23 @@
             type="button"
             aria-pressed="false"
           >
-            So sánh 5 thuật toán
+            So sánh thuật toán
+          </button>
+          <button
+            id="dataComparisonViewBtn"
+            class="view-tab"
+            type="button"
+            aria-pressed="false"
+          >
+            So sánh dữ liệu
+          </button>
+          <button
+            id="theoryViewBtn"
+            class="view-tab"
+            type="button"
+            aria-pressed="false"
+          >
+            Lý thuyết
           </button>
         </nav>
 
@@ -303,6 +320,154 @@
             Thời gian là mức trung bình của nhiều lần chạy trong trình duyệt,
             không bao gồm hoạt ảnh và có thể thay đổi theo thiết bị.
           </p>
+        </section>
+
+        <section
+          id="dataComparisonPanel"
+          class="data-comparison-panel"
+          aria-labelledby="data-comparison-title"
+          hidden
+        >
+          <div class="data-comparison-header">
+            <div>
+              <p class="section-kicker">Cùng giá trị, khác thứ tự</p>
+              <h2 id="data-comparison-title">Ảnh hưởng của dữ liệu đầu vào</h2>
+              <p id="dataComparisonAlgorithmLabel" class="data-comparison-subtitle">
+                Phân tích bằng Bubble Sort
+              </p>
+            </div>
+
+            <div class="data-comparison-actions">
+              <button id="dataSimulationBtn" class="button button-secondary" type="button">
+                <span aria-hidden="true">▶</span>
+                Chạy 3 mô phỏng
+              </button>
+              <button id="runDataComparisonBtn" class="button button-primary" type="button">
+                Phân tích lại
+              </button>
+            </div>
+          </div>
+
+          <div
+            id="dataOrderCards"
+            class="data-order-cards"
+            aria-label="Kết quả so sánh ba dạng dữ liệu đầu vào"
+          ></div>
+
+          <p id="dataComparisonInsight" class="data-comparison-insight" aria-live="polite">
+            Chọn thuật toán để quan sát mức độ ảnh hưởng của thứ tự đầu vào.
+          </p>
+
+          <p class="comparison-note">
+            Ba trường hợp sử dụng đúng cùng một tập giá trị. Bản xáo trộn được tạo
+            cố định từ tập dữ liệu hiện tại để mỗi lần phân tích cho kết quả có thể đối chiếu.
+          </p>
+        </section>
+
+        <section
+          id="theoryPanel"
+          class="theory-panel"
+          aria-labelledby="theory-title"
+          hidden
+        >
+          <div class="theory-header">
+            <div>
+              <p class="section-kicker">Tra cứu và ôn tập</p>
+              <h2 id="theory-title">Nhớ tên qua cách hoạt động</h2>
+              <p class="theory-sequence">
+                <strong>Bubble</strong> nổi · <strong>Selection</strong> chọn ·
+                <strong>Insertion</strong> chèn · <strong>Merge</strong> trộn ·
+                <strong>Quick</strong> chốt
+              </p>
+            </div>
+
+            <button id="theoryOpenVisualizerBtn" class="button button-primary" type="button">
+              Xem mô phỏng
+            </button>
+          </div>
+
+          <div
+            id="theoryAlgorithmTabs"
+            class="theory-algorithm-tabs"
+            role="tablist"
+            aria-label="Chọn thuật toán cần ôn tập"
+          ></div>
+
+          <div class="theory-layout">
+            <article class="theory-main-card">
+              <header class="theory-identity">
+                <span id="theorySymbol" class="theory-symbol" aria-hidden="true">B</span>
+                <div>
+                  <p id="theoryKeyword" class="theory-keyword">Từ khóa: Nổi</p>
+                  <h3 id="theoryAlgorithmName">Bubble Sort</h3>
+                </div>
+              </header>
+
+              <blockquote id="theoryMemory" class="theory-memory">
+                So đôi kề nhau – số lớn nổi dần về cuối.
+              </blockquote>
+
+              <div class="theory-explanation-grid">
+                <section>
+                  <h4>Ý tưởng cốt lõi</h4>
+                  <p id="theoryConcept"></p>
+                  <p id="theoryAnalogy" class="theory-analogy"></p>
+                </section>
+
+                <section>
+                  <h4>Cách thực hiện</h4>
+                  <ol id="theorySteps" class="theory-steps"></ol>
+                </section>
+              </div>
+            </article>
+
+            <aside class="theory-reference-card">
+              <section>
+                <h3>Dấu hiệu nhận biết</h3>
+                <ul id="theoryRecognition" class="theory-recognition"></ul>
+              </section>
+
+              <section class="theory-confusion-box">
+                <h3>Đừng nhầm với thuật toán khác</h3>
+                <p id="theoryConfusion"></p>
+              </section>
+
+              <dl class="theory-properties">
+                <div><dt>Ổn định</dt><dd id="theoryStable">Có</dd></div>
+                <div><dt>Tại chỗ</dt><dd id="theoryInPlace">Có</dd></div>
+                <div><dt>Tốt nhất</dt><dd id="theoryBest">O(n)</dd></div>
+                <div><dt>Trung bình</dt><dd id="theoryAverage">O(n²)</dd></div>
+                <div><dt>Xấu nhất</dt><dd id="theoryWorst">O(n²)</dd></div>
+                <div><dt>Bộ nhớ</dt><dd id="theorySpace">O(1)</dd></div>
+              </dl>
+
+              <p class="theory-terms">
+                <strong>Ổn định</strong>: giữ thứ tự của các phần tử bằng nhau.
+                <strong>Tại chỗ</strong>: không cần một mảng phụ lớn.
+              </p>
+
+              <p id="theorySuitable" class="theory-suitable"></p>
+            </aside>
+          </div>
+
+          <details class="theory-summary">
+            <summary>Bảng phân biệt nhanh 5 thuật toán</summary>
+            <div class="table-scroll">
+              <table class="comparison-table theory-summary-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Thuật toán</th>
+                    <th scope="col">Câu nhớ</th>
+                    <th scope="col">Tốt nhất</th>
+                    <th scope="col">Trung bình</th>
+                    <th scope="col">Xấu nhất</th>
+                    <th scope="col">Bộ nhớ</th>
+                  </tr>
+                </thead>
+                <tbody id="theorySummaryBody"></tbody>
+              </table>
+            </div>
+          </details>
         </section>
       </main>
 
