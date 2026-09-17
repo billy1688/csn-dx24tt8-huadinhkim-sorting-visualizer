@@ -66,6 +66,27 @@
       this.updateAccessibleLabel(step.array, step.description);
     }
 
+    restoreStep(array, completedSteps, initialDescription) {
+      this.sortedIndices.clear();
+
+      completedSteps.forEach((step) => {
+        if (step.type === "markSorted") {
+          step.indices.forEach((index) => this.sortedIndices.add(index));
+        } else if (step.type === "complete") {
+          step.array.forEach((_, index) => this.sortedIndices.add(index));
+        }
+      });
+
+      const lastStep = completedSteps[completedSteps.length - 1];
+      const description = lastStep?.description || initialDescription;
+
+      this.ensureBars(array.length);
+      this.updateBars(array, lastStep?.indices || [], lastStep?.type || "default");
+      this.highlightCodeLine(lastStep?.codeLine || 0);
+      this.setDescription(description);
+      this.updateAccessibleLabel(array, description);
+    }
+
     updateBars(array, activeIndices, activeType) {
       const maxValue = Math.max(...array, 1);
       const minVisualHeight = 8;

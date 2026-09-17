@@ -134,6 +134,7 @@
     startBtn: document.querySelector("#startBtn"),
     pauseBtn: document.querySelector("#pauseBtn"),
     pauseButtonText: document.querySelector("#pauseButtonText"),
+    previousStepBtn: document.querySelector("#previousStepBtn"),
     stepBtn: document.querySelector("#stepBtn"),
     resetBtn: document.querySelector("#resetBtn"),
     statusBadge: document.querySelector("#statusBadge"),
@@ -449,6 +450,7 @@
     elements.randomBtn.disabled = isActive;
     elements.startBtn.disabled = isActive;
     elements.pauseBtn.disabled = !isPlaybackActive;
+    elements.previousStepBtn.disabled = state.currentStep === 0;
     elements.pauseButtonText.textContent = isPaused ? "Tiếp tục" : "Tạm dừng";
     elements.startBtn.lastChild.textContent =
       state.status === "completed" ? " Chạy lại" : " Bắt đầu";
@@ -1023,6 +1025,7 @@
     elements.comparisonCount.textContent = String(state.comparisons);
     elements.swapCount.textContent = String(state.swaps);
     elements.elapsedTime.textContent = String(Math.round(getElapsedTime()));
+    elements.previousStepBtn.disabled = state.currentStep === 0;
   }
 
   function getElapsedTime() {
@@ -1212,6 +1215,37 @@
     executeNextStep(true);
   }
 
+  function runPreviousStep() {
+    if (state.status === "running") {
+      pauseRun();
+    }
+
+    if (state.currentStep === 0) {
+      return;
+    }
+
+    const undoneStep = state.steps[state.currentStep - 1];
+    state.currentStep -= 1;
+    state.comparisons -= undoneStep.comparisonsDelta;
+    state.swaps -= undoneStep.swapsDelta;
+    state.currentArray =
+      state.currentStep === 0
+        ? [...state.originalArray]
+        : [...state.steps[state.currentStep - 1].array];
+
+    visualizer.restoreStep(
+      state.currentArray,
+      state.steps.slice(0, state.currentStep),
+      getSelectedAlgorithm().introduction,
+    );
+
+    if (state.status === "completed") {
+      setStatus("paused");
+    }
+
+    updateStatistics();
+  }
+
   function finishRun() {
     commitActiveTime();
     clearPlaybackTimer();
@@ -1306,6 +1340,7 @@
   elements.comparisonMetricSelect.addEventListener("change", renderComparisonChart);
   elements.startBtn.addEventListener("click", startRun);
   elements.pauseBtn.addEventListener("click", togglePause);
+  elements.previousStepBtn.addEventListener("click", runPreviousStep);
   elements.stepBtn.addEventListener("click", runSingleStep);
   elements.resetBtn.addEventListener("click", resetRun);
 
