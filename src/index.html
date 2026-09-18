@@ -257,9 +257,14 @@
               <h2 id="comparison-title">So sánh 5 thuật toán</h2>
             </div>
 
-            <button id="runComparisonBtn" class="button button-primary" type="button">
-              Phân tích lại
-            </button>
+            <div class="data-comparison-actions">
+              <button id="exportComparisonBtn" class="button button-secondary" type="button" disabled>
+                Xuất CSV
+              </button>
+              <button id="runComparisonBtn" class="button button-primary" type="button">
+                Phân tích lại
+              </button>
+            </div>
           </div>
 
           <div class="comparison-summary" aria-label="Kết quả nổi bật">
@@ -342,6 +347,9 @@
             </div>
 
             <div class="data-comparison-actions">
+              <button id="exportDataComparisonBtn" class="button button-secondary" type="button" disabled>
+                Xuất CSV
+              </button>
               <button id="dataSimulationBtn" class="button button-secondary" type="button">
                 <span aria-hidden="true">▶</span>
                 Chạy 3 mô phỏng

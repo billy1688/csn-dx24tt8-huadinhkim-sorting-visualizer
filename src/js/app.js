@@ -148,7 +148,9 @@
     dataComparisonPanel: document.querySelector("#dataComparisonPanel"),
     theoryPanel: document.querySelector("#theoryPanel"),
     runComparisonBtn: document.querySelector("#runComparisonBtn"),
+    exportComparisonBtn: document.querySelector("#exportComparisonBtn"),
     runDataComparisonBtn: document.querySelector("#runDataComparisonBtn"),
+    exportDataComparisonBtn: document.querySelector("#exportDataComparisonBtn"),
     dataSimulationBtn: document.querySelector("#dataSimulationBtn"),
     dataComparisonAlgorithmLabel: document.querySelector(
       "#dataComparisonAlgorithmLabel",
@@ -468,6 +470,90 @@
     return `${durationMs.toFixed(3)} ms`;
   }
 
+  function serializeCsv(rows) {
+    return rows
+      .map((row) =>
+        row
+          .map((value) => `"${String(value).replaceAll('"', '""')}"`)
+          .join(","),
+      )
+      .join("\r\n");
+  }
+
+  function downloadCsv(filename, rows) {
+    // BOM giúp Excel nhận đúng dấu tiếng Việt khi mở tệp CSV.
+    const blob = new Blob(["\ufeff", serializeCsv(rows)], {
+      type: "text/csv;charset=utf-8",
+    });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    document.body.append(link);
+    link.click();
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 0);
+  }
+
+  const CSV_HEADER = [
+    "Chế độ",
+    "Thuật toán",
+    "Dạng dữ liệu",
+    "Mảng đầu vào",
+    "Số phần tử",
+    "Số lần so sánh",
+    "Thao tác dữ liệu",
+    "Thời gian trung bình (ms)",
+    "Số lần đo thời gian",
+  ];
+
+  function exportComparisonCsv() {
+    if (
+      state.comparisonResults.length === 0 ||
+      elements.exportComparisonBtn.disabled
+    ) {
+      return;
+    }
+
+    const input = state.originalArray.join(", ");
+    const rows = state.comparisonResults.map((result) => [
+      "So sánh thuật toán",
+      ALGORITHM_CATALOG[result.key].name,
+      "Dữ liệu hiện tại",
+      input,
+      state.originalArray.length,
+      result.comparisons,
+      result.operations,
+      result.durationMs,
+      result.repetitions,
+    ]);
+
+    downloadCsv("sorting-lab-so-sanh-thuat-toan.csv", [CSV_HEADER, ...rows]);
+  }
+
+  function exportDataComparisonCsv() {
+    if (
+      state.dataComparisonResults.length === 0 ||
+      elements.exportDataComparisonBtn.disabled
+    ) {
+      return;
+    }
+
+    const rows = state.dataComparisonResults.map((result) => [
+      "So sánh dữ liệu",
+      ALGORITHM_CATALOG[result.key].name,
+      result.label,
+      result.values.join(", "),
+      result.values.length,
+      result.comparisons,
+      result.operations,
+      result.durationMs,
+      result.repetitions,
+    ]);
+
+    downloadCsv("sorting-lab-so-sanh-du-lieu.csv", [CSV_HEADER, ...rows]);
+  }
+
   function getMinimumResults(property) {
     const minimum = Math.min(
       ...state.comparisonResults.map((result) => result[property]),
@@ -594,6 +680,8 @@
       window.clearTimeout(state.comparisonTimer);
     }
 
+    state.comparisonResults = [];
+    elements.exportComparisonBtn.disabled = true;
     setStatus("comparing");
     elements.runComparisonBtn.disabled = true;
     elements.runComparisonBtn.textContent = "Đang phân tích...";
@@ -604,6 +692,7 @@
           state.originalArray,
         );
         renderComparisonResults();
+        elements.exportComparisonBtn.disabled = false;
         setStatus("analyzed");
       } catch (error) {
         elements.comparisonBars.textContent = error.message;
@@ -925,6 +1014,8 @@
     }
 
     const algorithm = getSelectedAlgorithm();
+    state.dataComparisonResults = [];
+    elements.exportDataComparisonBtn.disabled = true;
     clearDataSimulation(true);
     setStatus("comparing");
     elements.dataComparisonAlgorithmLabel.textContent =
@@ -941,6 +1032,7 @@
             state.originalArray,
           );
         renderDataComparisonResults();
+        elements.exportDataComparisonBtn.disabled = false;
         setStatus("analyzed");
       } catch (error) {
         elements.dataOrderCards.textContent = error.message;
@@ -1064,6 +1156,10 @@
     clearPlaybackTimer();
     clearDataSimulation(true);
     stopClock();
+    state.comparisonResults = [];
+    state.dataComparisonResults = [];
+    elements.exportComparisonBtn.disabled = true;
+    elements.exportDataComparisonBtn.disabled = true;
 
     if (state.comparisonTimer !== null) {
       window.clearTimeout(state.comparisonTimer);
@@ -1335,7 +1431,9 @@
     switchView("visual"),
   );
   elements.runComparisonBtn.addEventListener("click", runComparison);
+  elements.exportComparisonBtn.addEventListener("click", exportComparisonCsv);
   elements.runDataComparisonBtn.addEventListener("click", runDataComparison);
+  elements.exportDataComparisonBtn.addEventListener("click", exportDataComparisonCsv);
   elements.dataSimulationBtn.addEventListener("click", toggleDataSimulation);
   elements.comparisonMetricSelect.addEventListener("change", renderComparisonChart);
   elements.startBtn.addEventListener("click", startRun);
