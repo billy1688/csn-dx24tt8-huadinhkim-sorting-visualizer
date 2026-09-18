@@ -1,0 +1,27 @@
+name: Kiểm tra mã nguồn
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check-source:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Lấy mã nguồn
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Cài Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+
+      - name: Kiểm tra ứng dụng và thuật toán
+        run: node --test tests/source.test.cjs
